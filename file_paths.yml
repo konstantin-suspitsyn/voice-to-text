@@ -1,0 +1,3 @@
+input_paths:
+  - "z:\\working\\gamebooks\\audio-records\\test\\microphone-test\\microphone-test_mixdown.wav"
+output_folder: "z:\\working\\gamebooks\\audio-records\\test\\microphone-test\\text-out"

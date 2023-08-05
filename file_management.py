@@ -11,12 +11,14 @@ class FileManager:
     INPUT_PATHS_KEY = "input_paths"
     OUTPUT_PATH_KEY = "output_folder"
     PATHS_YML = "file_paths.yml"
+    OUTPUT_NAMES = "output_names"
 
     def __init__(self):
         with open(self.PATHS_YML, 'r') as stream:
             self.file_list: dict = yaml.safe_load(stream)
         self.__check_errors_in_file_paths()
         self.__create_folder_if_not_exists()
+        self. __add_filename_list()
 
     def get_list_of_files(self) -> dict:
         """
@@ -48,3 +50,10 @@ class FileManager:
     def __create_folder_if_not_exists(self):
         if not os.path.exists(self.file_list[self.OUTPUT_PATH_KEY]):
             os.mkdir(self.file_list[self.OUTPUT_PATH_KEY])
+
+    def __add_filename_list(self):
+        self.file_list[self.OUTPUT_NAMES] = []
+        for path in self.file_list[self.INPUT_PATHS_KEY]:
+            temp_list_after_split = path.split(r"/")
+            temp_list_after_split = temp_list_after_split[-1].split("\\")
+            self.file_list[self.OUTPUT_NAMES].append(temp_list_after_split[-1])
