@@ -19,7 +19,9 @@ class SetPunctuation:
                 results = results + ' ' + prediction
             else:
                 results = results + prediction
+
         results = results.strip()
+
         return results
 
 
