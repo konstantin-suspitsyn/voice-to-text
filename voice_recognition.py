@@ -27,19 +27,20 @@ class ConvertToText:
                                filepath,
                                "-ar", str(self.FRAME_RATE), "-ac", "1", "-f", "s16le", "-"],
                               stdout=subprocess.PIPE) as process:
+            text_list: list[str] = []
 
             while True:
                 data = process.stdout.read(4000)
                 if len(data) == 0:
                     break
                 if self.rec.AcceptWaveform(data):
-                    self.rec.Result()
-                else:
-                    self.rec.PartialResult()
+                    text_list.append(json.loads(self.rec.Result())["text"])
 
-            text = json.loads(self.rec.FinalResult())["text"]
+            text_list.append(json.loads(self.rec.FinalResult())["text"])
 
-            return text
+            result: str = " ".join(text_list)
+
+            return result
 
     def convert_all_audios(self):
         for i, file_path in enumerate(self.file_management.get_list_of_files()[self.file_management.INPUT_PATHS_KEY]):
@@ -47,7 +48,8 @@ class ConvertToText:
             text_with_punctuation = SetPunctuation(text).insert_punctuation()
 
             save_path = os.path.join(self.file_management.get_list_of_files()[self.file_management.OUTPUT_PATH_KEY],
-                                     self.file_management.get_list_of_files()[self.file_management.OUTPUT_NAMES][i])
+                                     self.file_management.get_list_of_files()[self.file_management.OUTPUT_NAMES][
+                                         i] + str(".txt"))
 
             with open(save_path, "w") as f:
                 f.write(text_with_punctuation)
